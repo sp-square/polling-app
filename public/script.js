@@ -17,9 +17,25 @@ function addOption() {
 	formEl.insertBefore(newOption, buttonsEl);
 }
 
-function handleSubmit(e) {
+async function handleSubmit(e) {
 	e.preventDefault();
-	console.log('submit');
+	const question = document.querySelector('.question').value;
+	const options = Array.from(document.querySelectorAll('.options')).map(
+		(option) => option.value
+	);
+
+	// Assign a unique id to the question
+	const dbIds = await fetch('/ids');
+	const { ids } = await dbIds.json();
+	const id = ids.length === 0 ? 1 : Math.max(...ids) + 1;
+
+	const response = await fetch('/', {
+		method: 'POST',
+		headers: {
+			'Content-type': 'application/json',
+		},
+		body: JSON.stringify({ id, question, options }),
+	});
 }
 
 addBtnEl.addEventListener('click', addOption);
