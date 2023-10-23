@@ -33,10 +33,21 @@ app.post('/', (req, res) => {
 	res.sendStatus(200);
 });
 
-// Read the db
+// Retrieve all ids used for polls
 app.get('/ids', (req, res) => {
 	const ids = readDb();
 	res.status(200).send({ ids: Object.keys(ids) });
+});
+
+// Retrieve a specific poll by id
+app.get('/:id', (req, res) => {
+	console.log(req.params.id);
+	try {
+		res.status(200).sendFile('poll.html', { root: __dirname + '/public' });
+	} catch (error) {
+		console.log(error);
+		res.sendStatus(500);
+	}
 });
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
